@@ -51,9 +51,11 @@ For further help you can type
 *Note on loss function* : The training error used here, is the L1 Error (`nn.AbsCriterion`) whereas they say in the paper they used End Point Error (which is not the same as mean square error implementation provided by `nn.MSECriterion`). However the Criterion used in the code they provided is clearly the L1 criterion. We chose to use this criterion as an EPE criterion would require to hardcode a new criterion in CUDA. We also name it EPE instead of 'L1Error' to save space on CLI.
 
 ##Training Results
- FlowNetS
 
-FlowNetSBN
+|  FlowNetS | FlowNetSBN |
+|---|----|
+![train_result](https://github.com/ClementPinard/FlowNetTorch/blob/master/images/FlowNetStrain.png) |  ![test_result](https://github.com/ClementPinard/FlowNetTorch/blob/master/images/FlowNetSBNtrain.png)
+![train_result](https://github.com/ClementPinard/FlowNetTorch/blob/master/images/FlowNetStest.png) |  ![test_result](https://github.com/ClementPinard/FlowNetTorch/blob/master/images/FlowNetSBNtest.png)
 
 
 ##Live Demo

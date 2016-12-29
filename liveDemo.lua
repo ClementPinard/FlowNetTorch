@@ -14,7 +14,7 @@ require 'cudnn'
 
 
 opt = lapp[[
-     --input_height  (default 512)  frame_height, must be a multiple of 8
+     --input_height  (default 512)  frame_height, must be a multiple of 64
      --model   (default 'FlowNetS_SmallDisp.t7')
      --video   (default '')
      --output_height  (default 512) height of output flowmap
@@ -33,7 +33,6 @@ end
 cv.namedWindow{opt.network, cv.WINDOW_AUTOSIZE}
 local _,frame = cap:read{}
 
--- yes, that's true, net takes 0-1 input and output is VGG
 frame1 = nil
 frame2 = nil
 frames_array = {}

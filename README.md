@@ -58,7 +58,7 @@ For further help you can type
 
 ##Live Demo
 
-Thanks to [Sergey Zagoruyko](https://github.com/szagoruyko)'s [Troch OpenCV Demo](https://github.com/szagoruyko/torch-opencv-demos) , you can run a live demo using [OpenCV bindings for torch](https://github.com/VisionLabs/torch-opencv)
+Thanks to [Sergey Zagoruyko](https://github.com/szagoruyko)'s [Torch OpenCV Demo](https://github.com/szagoruyko/torch-opencv-demos) , you can run a live demo using [OpenCV bindings for torch](https://github.com/VisionLabs/torch-opencv)
 It has been tested on a **Quadro K2200M** powered Laptop at ~3 fps using training input size (you can speed it up by reducing input size)
 
 	th liveDemo.lua --model FlowNetS_pretrained.t7 --input_height 256 --output_height 1200

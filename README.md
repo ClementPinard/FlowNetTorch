@@ -64,3 +64,8 @@ It has been tested on a **Quadro K2200M** powered Laptop at ~3 fps using trainin
 	th liveDemo.lua --model FlowNetS_pretrained.t7 --input_height 256 --output_height 1200
 
 
+##Update regarding flying chairs dataset.
+
+[the flying chair dataset](http://lmb.informatik.uni-freiburg.de/resources/datasets/FlyingChairs.en.html) is no longer using a list file, which made this implementation unable to retrieve image and flow files. The code has been updated to get it by itself (as the filenames follow a very regular pattern).
+
+However, if you want to add your own image pairs to the dataset, the compatibility with the list file is keeped. You can grab a (maybe outdated) backup of list file [here](https://drive.google.com/open?id=0B5EC7HMbyk3COEVEZ1VETzhhMnc)

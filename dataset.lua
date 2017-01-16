@@ -65,16 +65,27 @@ function dataset:__init(...)
    local imgSequences = {}
    local maxPathLength = 0
    local length = 0
-   print('loading ' .. paths.concat(self.path,'FlyingChairs_release.list'))
-   local list_file = io.open(paths.concat(self.path,'FlyingChairs_release.list'))
-   for line in list_file:lines() do
-    length = length + 1
-    local img1,img2,flow = unpack(line:split("\t"))
-    maxPathLength = math.max(maxPathLength,paths.concat(self.path,img1):len())
-    maxPathLength = math.max(maxPathLength,paths.concat(self.path,img2):len())
-    maxPathLength = math.max(maxPathLength,paths.concat(self.path,flow):len())
-    table.insert(imgSequences,{paths.concat(self.path,img1),paths.concat(self.path,img2),paths.concat(self.path,flow)})
-   end
+   --last update of official flying chairs dataset doesn't have a list file anymore. we keep the functionnality for outdated and custom datasets
+   if paths.filep(paths.concat(self.path,'FlyingChairs_release.list')) then
+      print('loading ' .. paths.concat(self.path,'FlyingChairs_release.list'))
+      local list_file = io.open(paths.concat(self.path,'FlyingChairs_release.list'))
+
+      for line in list_file:lines() do
+        length = length + 1
+        local img1,img2,flow = unpack(line:split("\t"))
+        maxPathLength = math.max(maxPathLength,paths.concat(self.path,img1):len())
+        maxPathLength = math.max(maxPathLength,paths.concat(self.path,img2):len())
+        maxPathLength = math.max(maxPathLength,paths.concat(self.path,flow):len())
+        table.insert(imgSequences,{paths.concat(self.path,img1),paths.concat(self.path,img2),paths.concat(self.path,flow)})
+      end
+   else
+     local data_dir = paths.concat(self.path,'FlyingChairs_release','data')
+     maxPathLength =  paths.concat(data_dir,'00001_img1.ppm'):len()
+     for i = 1,22872 do
+       length = length + 1
+       table.insert(imgSequences,{paths.concat(data_dir,('%05d_img1.ppm'):format(i)),paths.concat(data_dir,('%05d_img2.ppm'):format(i)),paths.concat(data_dir,('%05d_flow.flo'):format(i))})
+     end
+  end
    maxPathLength = maxPathLength + 1
    self.imagePath:resize(length, 3,maxPathLength):fill(0)
    local s_data = self.imagePath:data()

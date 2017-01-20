@@ -119,8 +119,7 @@ function testBatch(inputsCPU, labelsCPU, trainInputsCPU, trainLabelsCPU)
    
    
    inputs:resize(trainInputsCPU:size()):copy(trainInputsCPU)
-   inputs:copy(trainInputsCPU)
-   labels:copy(trainLabelsCPU)
+   labels:resize(trainLabelsCPU:size()):copy(trainLabelsCPU)
    
    local outputs = model:forward(inputs)
    local multiLabels = multiScaleNet:forward(labels)

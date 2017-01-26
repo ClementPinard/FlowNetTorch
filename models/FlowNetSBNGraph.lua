@@ -21,11 +21,11 @@ function createModel(...)
           - nn.SpatialBatchNormalization(256,1e-3)
           - nn.LeakyReLU(0.1,true)
   local conv4 = conv3_1 
-          - nn.SpatialConvolution(256,256,3,3,2,2,1,1)
-          - nn.SpatialBatchNormalization(256,1e-3)
+          - nn.SpatialConvolution(256,512,3,3,2,2,1,1)
+          - nn.SpatialBatchNormalization(512,1e-3)
           - nn.LeakyReLU(0.1,true)
   local conv4_1 = conv4 
-            - nn.SpatialConvolution(256,512,3,3,1,1,1,1)
+            - nn.SpatialConvolution(512,512,3,3,1,1,1,1)
             - nn.SpatialBatchNormalization(512,1e-3)
             - nn.LeakyReLU(0.1,true)
   local conv5 = conv4_1 

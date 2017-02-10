@@ -24,19 +24,20 @@ require 'graph'
 -- 1.1 If preloading option is set, preload weights from existing models appropriately
 if opt.retrain ~= 'none' then
    assert(paths.filep(opt.retrain), 'File not found: ' .. opt.retrain)
+   paths.dofile('models/' .. opt.netType .. '.lua')
+   print('=> Creating criterion from file: models/' .. opt.netType .. '.lua')
+   _, criterion = createModel(opt.nGPU)
    print('Loading model from file: ' .. opt.retrain);
-   model = loadDataParallel(opt.retrain, opt.nGPU) -- defined in util.lua
+   model = loadDataParallel(opt.retrain, opt.nGPU):cuda() -- defined in util.lua
 else
    paths.dofile('models/' .. opt.netType .. '.lua')
    print('=> Creating model from file: models/' .. opt.netType .. '.lua')
    model, criterion = createModel(opt.nGPU) -- for the model creation code, check the models/ folder
    model = model:cuda()
    criterion=criterion:cuda()
-   cudnn.convert(model, cudnn)
    
    function MSRinit(net)
      local function init(name)
-     --print(net:findModules(name))
        for k,v in pairs(net:findModules(name)) do
          local n = v.kW*v.kH*v.nOutputPlane
          v.weight:normal(0,math.sqrt(2/n))
@@ -49,8 +50,7 @@ else
    end
       
   MSRinit(model)
-  
-  torch.save('test.t7',model)
+  cudnn.convert(model, cudnn)
    
 end
 

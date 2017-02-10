@@ -76,6 +76,8 @@ function createModel(...)
    net.scales = 5
    net.imageSize = {512,384}
    net.imageCrop = {448,320}
+
+   local criterion = multiImgCriterion(net.scales,opt.loss,{0.32,0.08,0.02,0.01,0.005}):cuda()
    
-  return net
+  return net, criterion
 end

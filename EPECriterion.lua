@@ -2,7 +2,7 @@ local EPECriterion, parent = torch.class('nn.EPECriterion', 'nn.Criterion')
 
 function EPECriterion:__init(scales,initialDownScale,weights,criterion)
    parent.__init(self)
-   self.EPE = torch.tensor()
+   self.EPE = torch.Tensor()
 end
 
 function EPECriterion:updateOutput(input, target)

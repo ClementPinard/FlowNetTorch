@@ -179,7 +179,7 @@ function dataset:sample(quantity,augmentData)
           self.perm = torch.randperm(self.ListTrain:size(1))
         end
       end
-      local out = self:getASample()
+      local out = self:getASample(augmentData)
       table.insert(dataTable, out[1])
       table.insert(flowTable, out[2])
       

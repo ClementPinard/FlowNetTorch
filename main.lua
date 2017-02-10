@@ -37,6 +37,7 @@ cutorch.setDevice(opt.GPU) -- by default, use GPU 1
 if opt.cudnnMode == 1 then
   cudnn.benchmark = true
 elseif opt.cudnnMode == 2 then
+  cudnn.benchmark = true
   cudnn.fastest = true
 end
 torch.manualSeed(opt.manualSeed)
@@ -48,8 +49,6 @@ paths.dofile('train.lua')
 paths.dofile('test.lua')
 
 epoch = opt.epochNumber - 1
-test()
-testLogger:plot()
 for i=1,opt.nEpochs do
    epoch = epoch +1
    train()

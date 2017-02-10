@@ -76,40 +76,38 @@ local Hook = function(self, img1, img2, flow,augmentData)
      --generate flowamp from rotation between the 2 frames   
      local rotate_flow = torch.Tensor():resizeAs(label)
      for i=1,opt.width do
-      rotate_flow[2][{{},i}]:fill((i-opt.width/2)*(r1-r2))
+      rotate_flow[2][{{},i}]:fill((i-opt.width/2)*(-r2))
      end
      for i=1,opt.height do
-      rotate_flow[1][i]:fill((i-opt.height/2)*(r2-r1))
+      rotate_flow[1][i]:fill((i-opt.height/2)*(r2))
      end
      
      --data augmentation
      label:add(rotate_flow/20)
-     label[1]:add((t2[1])/20)
-     label[2]:add((t2[2])/20)
      
      label = image.rotate(label,r1)
      --rotate flow vectors
      label_ = label:clone()
-     label[1] = math.cos(r1)*label_[1] - math.sin(r1)*label_[2]
-     label[2] = math.sin(r1)*label_[1] + math.cos(r1)*label_[2]
+     label[1] = math.cos(r1)*label_[1] + math.sin(r1)*label_[2]
+     label[2] = -math.sin(r1)*label_[1] + math.cos(r1)*label_[2]
 
      inputs[1] = image.rotate(inputs[1],r1)
-     inputs[2] = image.rotate(inputs[2],r2)
+     inputs[2] = image.rotate(inputs[2],r1+r2)
      
      label = image.translate(label,t1[1],t1[2])
      inputs[1] = image.translate(inputs[1],t1[1],t1[2])
-     inputs[2] = image.translate(inputs[2],ti[1] + t2[1],t1[1] + t2[2])
+     inputs[2] = image.translate(inputs[2],t1[1] + t2[1],t1[1] + t2[2])
+
+     label[1]:add((t2[1])/20)
+     label[2]:add((t2[2])/20)
      
      --rescale and crop at desired size at the same time
-     label = image.crop(image.scale(label,'*'..zoom), 'c', cropSize[1], cropSize[2])
-     local cropped_inputs = torch.FloatTensor(2,loadSize[1],cropSize[2],cropSize[1])
-     cropped_inputs[1] = image.crop(image.scale(inputs[1],'*'..zoom), 'c', cropSize[1], cropSize[2])
-     cropped_inputs[2] = image.crop(image.scale(inputs[2],'*'..zoom), 'c', cropSize[1], cropSize[2])
+     label = image.crop(image.scale(label,'*'..zoom), 'c', cropSize[2], cropSize[3])*zoom
+     local cropped_inputs = torch.FloatTensor(2,loadSize[1],cropSize[3],cropSize[2])
+     cropped_inputs[1] = image.crop(image.scale(inputs[1],'*'..zoom), 'c', cropSize[2], cropSize[3])
+     cropped_inputs[2] = image.crop(image.scale(inputs[2],'*'..zoom), 'c', cropSize[2], cropSize[3])
      inputs = cropped_inputs
      
-     --[[w = image.display{image=inputs, offscreen=false, win=w}
-     w2 = image.display{image=label, offscreen=false, win=w2}
-     ]]--
    end
    
    -- mean/std

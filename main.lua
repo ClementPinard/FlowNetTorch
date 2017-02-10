@@ -36,7 +36,7 @@ print(opt)
 cutorch.setDevice(opt.GPU) -- by default, use GPU 1
 if opt.cudnn == 1 then
   cudnn.benchmark = true
-elif opt.cudnn == 2 then
+elseif opt.cudnn == 2 then
   cudnn.fastest = true
 end
 torch.manualSeed(opt.manualSeed)

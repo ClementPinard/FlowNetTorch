@@ -2,6 +2,7 @@ require 'nn'
 require 'cunn'
 require 'cudnn'
 require 'cutorch'
+dofile 'EPECriterion.lua'
 
 function multiScale(initScale,scaleNb,net)
   if not net then
@@ -19,7 +20,11 @@ function multiImgCriterion(nb, loss, weights)
   weights = weights and  torch.Tensor(weights) or torch.Tensor(nb):fill(1)
   
   for i=1,nb do
-    criterion:add(loss == 'MSE' and nn.MSECriterion() or nn.AbsCriterion(), weights[i])
+    criterion:add(   (loss == 'EPE' and nn.EPECriterion())
+                  or (loss == 'Abs' and nn.AbsCriterion())
+                  or (loss == 'MSE' and nn.MSECriterion())
+                  or (loss == 'SmoothL1' and nn.SmoothL1Criterion()),
+                  weights[i])
   end
   
   return criterion

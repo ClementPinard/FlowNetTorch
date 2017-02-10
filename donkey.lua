@@ -88,7 +88,7 @@ local Hook = function(self, img1, img2, flow,augmentData)
      label[2]:add((t2[2])/20)
      
      label = image.rotate(label,r1)
-     #rotate flow vectors
+     --rotate flow vectors
      label_ = label:clone()
      label[1] = math.cos(r1)*label_[1] - math.sin(r1)*label_[2]
      label[2] = math.sin(r1)*label_[1] + math.cos(r1)*label_[2]

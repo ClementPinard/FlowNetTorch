@@ -29,7 +29,9 @@ if opt.retrain ~= 'none' then
 else
    paths.dofile('models/' .. opt.netType .. '.lua')
    print('=> Creating model from file: models/' .. opt.netType .. '.lua')
-   model = createModel(opt.nGPU):cuda() -- for the model creation code, check the models/ folder
+   model, criterion = createModel(opt.nGPU) -- for the model creation code, check the models/ folder
+   model = model:cuda()
+   criterion=criterion:cuda()
    cudnn.convert(model, cudnn)
    
    function MSRinit(net)
@@ -57,10 +59,10 @@ print('=> Model')
 
 
 
-opt.downSample = model.downSample
-opt.scales = model.scales
---criterion = nn.MSECriterion():cuda()
-criterion = multiImgCriterion(5,opt.loss,{0.005,0.01,0.02,0.08,0.32}):cuda()
+opt.downSample = model.downSample or opt.downSample
+opt.scales = model.scales or opt.scales
+
+criterion = criterion or multiImgCriterion(opt.scales,opt.loss,{0.32,0.08,0.02,0.01,0.005}):cuda()
 
 if opt.loss ~= 'Abs' then
   testCriterion = multiImgCriterion(5,'Abs'):cuda()

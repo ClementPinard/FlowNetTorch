@@ -15,14 +15,14 @@ function EPECriterion:updateOutput(input, target)
    else
      self.EPE = torch.pow(diffMap[1] + diffMap[2], 0.5)
    end  
-   self.output = torch.mean(EPE)
+   self.output = torch.mean(self.EPE)
    return self.output
 end
 
 function EPECriterion:updateGradInput(input, target)
    self.gradInput = input-target
-   assert(gradInput:nDimension() == 4 or gradInput:nDimension() == 3)
-   if gradInput:nDimension() == 4 then
+   assert(self.gradInput:nDimension() == 4 or gradInput:nDimension() == 3)
+   if self.gradInput:nDimension() == 4 then
      self.gradInput[{{},1}]:cdiv(self.EPE)
      self.gradInput[{{},2}]:cdiv(self.EPE)
    else

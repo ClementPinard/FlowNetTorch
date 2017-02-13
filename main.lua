@@ -29,7 +29,7 @@ paths.mkdir(opt.save)
 paths.dofile('util.lua')
 paths.dofile('model.lua')
 opt.imageSize = model.imageSize or {opt.width,opt.height}
-opt.imageCrop = model.imageCrop or opt.imageSize
+opt.imageCrop = model.imageCrop or {opt.cropWith,opt.cropHeight}
 
 print(opt)
 
@@ -49,6 +49,9 @@ paths.dofile('train.lua')
 paths.dofile('test.lua')
 
 epoch = opt.epochNumber - 1
+if opt.retrain then
+    test()
+end
 for i=1,opt.nEpochs do
    epoch = epoch +1
    train()

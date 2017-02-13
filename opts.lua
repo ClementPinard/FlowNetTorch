@@ -45,7 +45,7 @@ function M.parse(arg)
     cmd:option('-netType',     'FlowNetS', 'Options: More to come after')
     cmd:option('-retrain',     'none', 'provide path to model to retrain with')
     cmd:option('-optimState',  'none', 'provide path to an optimState to reload from')
-    cmd:option('-loss',        'EPE',  'loss function for flowmaps (EPE, Abs, MSE or SmoothL1)')
+    cmd:option('-loss',        'Abs',  'loss function for flowmaps (Abs, MSE or SmoothL1)')
     ----------Log options ------------------------------------
     cmd:option('-logAllScales',  false, 'log all scales used for training (can be messy in the final graph')
     cmd:text()

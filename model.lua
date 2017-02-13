@@ -64,11 +64,7 @@ opt.scales = model.scales or opt.scales
 
 criterion = criterion or multiImgCriterion(opt.scales,opt.loss,{0.32,0.08,0.02,0.01,0.005}):cuda()
 
-if opt.loss ~= 'Abs' then
-  testCriterion = multiImgCriterion(5,'Abs'):cuda()
-else
-  testCriterion = criterion
-end
+testCriterion = multiImgCriterion(opt.scales,'Abs'):cuda()
 
 
 print('=> Criterion')

@@ -30,6 +30,7 @@ testLogger.showPlot = false
 local batchNumber
 local mean_dist, train_mean_dist
 local timer = torch.Timer()
+local multiScaleNet = multiScale(opt.downSample,opt.scales,net):cuda()
 
 function test()
    print('==> doing epoch on validation data:')
@@ -89,8 +90,8 @@ function test()
       testLogger:add{train_mean_dist[5], mean_dist[5]}
    end
    print(string.format('Epoch: [%d][TESTING SUMMARY] Total Time(s): %.2f \t'
-                          .. 'average accuracy : %.5f , (px) \t ',
-                       epoch, timer:time().real, mean_dist[5]))
+                          .. 'average accuracy : %.5f , (test set, px) \t %.5f , (train set, px) ',
+                       epoch, timer:time().real, mean_dist[5], train_mean_dist[5]))
 
    print('\n')
 
@@ -101,19 +102,16 @@ end -- of test()
 local inputs = torch.CudaTensor()
 local labels = torch.CudaTensor()
 
-local multiScaleNet = multiScale(opt.downSample,opt.scales,net):cuda()
-
 function testBatch(inputsCPU, labelsCPU, trainInputsCPU, trainLabelsCPU)
    batchNumber = batchNumber + opt.batchSize
    local err,err2 = {},{}
    inputs:resize(inputsCPU:size()):copy(inputsCPU)
    labels:resize(labelsCPU:size()):copy(labelsCPU)
-
    local outputs = model:forward(inputs)
    local multiLabels = multiScaleNet:forward(labels) 
-   criterion:forward(outputs, multiLabels)
+   testCriterion:forward(outputs, multiLabels)
    err={}
-   for i,v in ipairs(criterion.criterions) do
+   for i,v in ipairs(testCriterion.criterions) do
     table.insert(err,v.output)
    end
    
@@ -124,17 +122,19 @@ function testBatch(inputsCPU, labelsCPU, trainInputsCPU, trainLabelsCPU)
    local outputs = model:forward(inputs)
    local multiLabels = multiScaleNet:forward(labels)
    testCriterion:forward(outputs, multiLabels)
-      err2={}
-      for i,v in ipairs(criterion.criterions) do
-        table.insert(err2,v.output)
-      end
+    err2={}
+    for i,v in ipairs(testCriterion.criterions) do
+      table.insert(err2,v.output)
+    end
    
    cutorch.synchronize()
    for i= 1,#err2 do
     mean_dist[i] = (mean_dist[i] or 0) + err[i]
     train_mean_dist[i] = (train_mean_dist[i] or 0) + err2[i]
    end
-   if batchNumber % 1024 == 0 then
-      print(('Epoch: Testing [%d][%d/%d]'):format(epoch, batchNumber, testSize))
+   if batchNumber % 10*opt.batchSize == 0 then
+      print(('Epoch: Testing [%d][%d/%d], test set error : %f , train set error : %f'):format(epoch, batchNumber, testSize,
+                                                                                              20*mean_dist[5]*opt.batchSize / batchNumber,
+                                                                                              20*train_mean_dist[5]*opt.batchSize / batchNumber))
    end
 end

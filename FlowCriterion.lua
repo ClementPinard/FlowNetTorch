@@ -20,11 +20,7 @@ function multiImgCriterion(nb, loss, weights)
   weights = weights and  torch.Tensor(weights) or torch.Tensor(nb):fill(1)
   
   for i=1,nb do
-    criterion:add(   (loss == 'EPE' and nn.EPECriterion())
-                  or (loss == 'Abs' and nn.AbsCriterion())
-                  or (loss == 'MSE' and nn.MSECriterion())
-                  or (loss == 'SmoothL1' and nn.SmoothL1Criterion()),
-                  weights[i])
+    criterion:add(nn.EPECriterion(loss),weights[i])
   end
   
   return criterion

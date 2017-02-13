@@ -49,7 +49,7 @@ paths.dofile('train.lua')
 paths.dofile('test.lua')
 
 epoch = opt.epochNumber - 1
-if opt.retrain then
+if opt.retrain ~= 'none' then
     test()
 end
 for i=1,opt.nEpochs do

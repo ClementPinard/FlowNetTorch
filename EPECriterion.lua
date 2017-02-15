@@ -7,6 +7,8 @@ function EPECriterion:__init(scales,criterion)
     self.criterion = nn.SmoothL1Criterion():cuda()
    elseif criterion == 'MSE' then
     self.criterion = nn.MSECriterion():cuda()
+   else --AbsCriterions
+    self.criterion = nn.AbsCriterion():cuda()
    end
 end
 
@@ -20,26 +22,21 @@ function EPECriterion:updateOutput(input, target)
    else
      self.EPE = torch.pow(diffMap[1] + diffMap[2], 0.5)
    end
-   if self.criterion then
-    self.output = self.criterion:forward(self.EPE, torch.CudaTensor:resizeAs(self.EPE):fill(0))
-   else
-    self.output = torch.mean(self.EPE)
-   end
+   self.zeroEPE = torch.zeros(self.EPE:size()):cuda():fill(0)
+   self.output = self.criterion:forward(self.EPE, self.zeroEPE)
    return self.output
 end
 
 function EPECriterion:updateGradInput(input, target)
    self.gradInput = input-target
+   local gradOutput = torch.cdiv(self.criterion:backward(self.EPE,self.zeroEPE),self.EPE)
    assert(self.gradInput:nDimension() == 4 or gradInput:nDimension() == 3)
    if self.gradInput:nDimension() == 4 then
-     self.gradInput[{{},1}]:cdiv(self.EPE)
-     self.gradInput[{{},2}]:cdiv(self.EPE)
+     self.gradInput[{{},1}]:cmul(gradOutput)
+     self.gradInput[{{},2}]:cmul(gradOutput)
    else
-     self.gradInput[1]:cdiv(self.EPE)
-     self.gradInput[2]:cdiv(self.EPE)
-   end
-   if self.criterion then
-    self.gradInput = self.gradInput*self.criterion:backward(self.EPE,torch.CudaTensor:resizeAs(self.EPE):fill(0))
+     self.gradInput[1]:cmul(gradOutput)
+     self.gradInput[2]:cmul(gradOutput)
    end
    return self.gradInput
 end

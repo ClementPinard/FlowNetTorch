@@ -5,57 +5,55 @@ nngraph.annotateNodes()
 function createModel(...)
 
   local input = -nn.Identity()
-  local conv1 = input - nn.SpatialConvolution(6,64,7,7,2,2,3,3)
+  local conv1 = input - nn.SpatialConvolution(6,64,7,7,2,2,3,3):noBias()
           - nn.SpatialBatchNormalization(64,1e-3)
           - nn.LeakyReLU(0.1, true)
   local conv2 = conv1 
-          - nn.SpatialConvolution(64,128,5,5,2,2,2,2)
+          - nn.SpatialConvolution(64,128,5,5,2,2,2,2):noBias()
           - nn.SpatialBatchNormalization(128,1e-3)
           - nn.LeakyReLU(0.1,true)
   local conv3 = conv2 
-          - nn.SpatialConvolution(128,256,5,5,2,2,2,2)
+          - nn.SpatialConvolution(128,256,5,5,2,2,2,2):noBias()
           - nn.SpatialBatchNormalization(256,1e-3)
           - nn.LeakyReLU(0.1,true)
   local conv3_1 = conv3 
-          - nn.SpatialConvolution(256,256,3,3,1,1,1,1)
+          - nn.SpatialConvolution(256,256,3,3,1,1,1,1):noBias()
           - nn.SpatialBatchNormalization(256,1e-3)
           - nn.LeakyReLU(0.1,true)
   local conv4 = conv3_1 
-          - nn.SpatialConvolution(256,512,3,3,2,2,1,1)
+          - nn.SpatialConvolution(256,512,3,3,2,2,1,1):noBias()
           - nn.SpatialBatchNormalization(512,1e-3)
           - nn.LeakyReLU(0.1,true)
   local conv4_1 = conv4 
-            - nn.SpatialConvolution(512,512,3,3,1,1,1,1)
+            - nn.SpatialConvolution(512,512,3,3,1,1,1,1):noBias()
             - nn.SpatialBatchNormalization(512,1e-3)
             - nn.LeakyReLU(0.1,true)
   local conv5 = conv4_1 
-            - nn.SpatialConvolution(512,512,3,3,2,2,1,1)
+            - nn.SpatialConvolution(512,512,3,3,2,2,1,1):noBias()
             - nn.SpatialBatchNormalization(512,1e-3)
             - nn.LeakyReLU(0.1,true)
   local conv5_1 = conv5
-            - nn.SpatialConvolution(512,512,3,3,1,1,1,1)
+            - nn.SpatialConvolution(512,512,3,3,1,1,1,1):noBias()
             - nn.SpatialBatchNormalization(512,1e-3)
             - nn.LeakyReLU(0.1,true)
   local conv6 = conv5_1 
-            - nn.SpatialConvolution(512,1024,3,3,2,2,1,1)
+            - nn.SpatialConvolution(512,1024,3,3,2,2,1,1):noBias()
             - nn.SpatialBatchNormalization(1024,1e-3)
             - nn.LeakyReLU(0.1,true)
   local conv6_1 = conv6
-            - nn.SpatialConvolution(1024,1024,3,3,1,1,1,1)
+            - nn.SpatialConvolution(1024,1024,3,3,1,1,1,1):noBias()
             - nn.SpatialBatchNormalization(1024,1e-3)
             - nn.LeakyReLU(0.1,true)
   local predict_flow6 =conv6_1
             - nn.SpatialConvolution(1024,2,3,3,1,1,1,1)
   local deconv5 = conv6_1
             - nn.SpatialFullConvolution(1024,512,4,4,2,2,1,1)
-            - nn.SpatialBatchNormalization(512,1e-3)
             - nn.LeakyReLU(0.1,true)
   local upsampled_flow6_to_5 = predict_flow6
             - nn.SpatialFullConvolution(2,2,4,4,2,2,1,1)
   local concat5 = {conv5_1,deconv5,upsampled_flow6_to_5} - nn.JoinTable(1,3)
   local deconv4 = concat5
             - nn.SpatialFullConvolution(1026,256,4,4,2,2,1,1)
-            - nn.SpatialBatchNormalization(256,1e-3)
             - nn.LeakyReLU(0.1,true)
   local predict_flow5 = concat5
             - nn.SpatialConvolution(1026,2,3,3,1,1,1,1)
@@ -64,7 +62,6 @@ function createModel(...)
   local concat4 = {conv4_1,deconv4,upsampled_flow5_to_4} - nn.JoinTable(1,3)
   local deconv3 = concat4
             - nn.SpatialFullConvolution(770,128,4,4,2,2,1,1)
-            - nn.SpatialBatchNormalization(128,1e-3)
             - nn.LeakyReLU(0.1,true)
   local predict_flow4 = concat4
             - nn.SpatialConvolution(770,2,3,3,1,1,1,1)
@@ -73,7 +70,6 @@ function createModel(...)
   local concat3 = {conv3_1,deconv3,upsampled_flow4_to_3} - nn.JoinTable(1,3)
   local deconv2 = concat3
             - nn.SpatialFullConvolution(386,64,4,4,2,2,1,1)
-            - nn.SpatialBatchNormalization(64,1e-3)
             - nn.LeakyReLU(0.1,true)
   local predict_flow3 = concat3
             - nn.SpatialConvolution(386,2,3,3,1,1,1,1)

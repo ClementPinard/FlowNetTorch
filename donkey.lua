@@ -47,7 +47,7 @@ local Hook = function(self, img1, img2, flow,augmentData)
    local inputs = torch.FloatTensor(2,loadSize[1],loadSize[3],loadSize[2])
    inputs[1]:copy(loadImage(img1))
    inputs[2]:copy(loadImage(img2))
-   local label = flow_loader.load(flow)/20
+   local label = flow_loader.load(flow)
    
    if augmentData then
      local iW = inputs:size(4)
@@ -68,9 +68,8 @@ local Hook = function(self, img1, img2, flow,augmentData)
       label[2] = label[2]*(-1)
      end
      
-     --apply data augmentation : random zoom, translation and rotation
-     local zoom = torch.uniform(0.9,1.0)
-     local t1,t2 = 10*torch.rand(2),10*torch.rand(2)
+     --apply data augmentation : random translation and rotation
+     local t = 10*torch.rand(2)
      local r1,r2 = torch.uniform(-0.2,0.2),torch.uniform(-0.1,0.1)
      
      --generate flowamp from rotation between the 2 frames   
@@ -83,7 +82,7 @@ local Hook = function(self, img1, img2, flow,augmentData)
      end
      
      --data augmentation
-     label:add(rotate_flow/20)
+     label:add(rotate_flow)
      
      label = image.rotate(label,r1)
      --rotate flow vectors
@@ -94,18 +93,17 @@ local Hook = function(self, img1, img2, flow,augmentData)
      inputs[1] = image.rotate(inputs[1],r1)
      inputs[2] = image.rotate(inputs[2],r1+r2)
      
-     label = image.translate(label,t1[1],t1[2])
-     inputs[1] = image.translate(inputs[1],t1[1],t1[2])
-     inputs[2] = image.translate(inputs[2],t1[1] + t2[1],t1[1] + t2[2])
-
-     label[1]:add((t2[1])/20)
-     label[2]:add((t2[2])/20)
+     inputs[2] = image.translate(inputs[2],t[1],t[2])
+     label[1] = label[1] + t[1]
+     label[2] = label[2] + t[2]
      
+     local tw = torch.uniform(math.max(0,t[1]),math.min(loadSize[2]-cropSize[2]+t[1],loadSize[2]-cropSize[2]))
+     local th = torch.uniform(math.max(0,t[2]),math.min(loadSize[3]-cropSize[3]+t[2],loadSize[3]-cropSize[3]))
      --rescale and crop at desired size at the same time
-     label = image.crop(image.scale(label,'*'..zoom), 'c', cropSize[2], cropSize[3])*zoom
+     label = image.crop(label, tw, th, tw+cropSize[2], th+cropSize[3])
      local cropped_inputs = torch.FloatTensor(2,loadSize[1],cropSize[3],cropSize[2])
-     cropped_inputs[1] = image.crop(image.scale(inputs[1],'*'..zoom), 'c', cropSize[2], cropSize[3])
-     cropped_inputs[2] = image.crop(image.scale(inputs[2],'*'..zoom), 'c', cropSize[2], cropSize[3])
+     cropped_inputs[1] = image.crop(inputs[1], tw, th, tw+cropSize[2], th+cropSize[3])
+     cropped_inputs[2] = image.crop(inputs[2], tw, th, tw+cropSize[2], th+cropSize[3])
      inputs = cropped_inputs
      
    end
@@ -117,6 +115,7 @@ local Hook = function(self, img1, img2, flow,augmentData)
         if std then inputs[{{j},{i},{},{}}]:div(std[i]) end
      end
    end
+   label:div(20)
    return {inputs, label}
 end
 

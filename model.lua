@@ -41,7 +41,7 @@ else
        for k,v in pairs(net:findModules(name)) do
          local n = v.kW*v.kH*v.nOutputPlane
          v.weight:normal(0,math.sqrt(2/n))
-         v.bias:zero()
+         if v.bias then v.bias:zero() end
        end
      end
         

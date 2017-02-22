@@ -15,12 +15,11 @@ end
 function EPECriterion:updateOutput(input, target)
    
    local diffMap = input-target
-   diffMap = torch.pow(diffMap,2)
    assert(input:nDimension() == 4 or input:nDimension() == 3)
    if input:nDimension() == 4 then
-     self.EPE = torch.pow(diffMap[{{},1}] + diffMap[{{},2}], 0.5)
+     self.EPE = diffMap:norm(2,2)
    else
-     self.EPE = torch.pow(diffMap[1] + diffMap[2], 0.5)
+     self.EPE = diffMap:norm(2,1)
    end
    self.zeroEPE = torch.zeros(self.EPE:size()):cuda():fill(0)
    self.output = self.criterion:forward(self.EPE, self.zeroEPE)

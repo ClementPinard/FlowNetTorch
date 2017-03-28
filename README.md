@@ -1,7 +1,7 @@
 
 FlowNet for Torch
 =======
-##Summary
+## Summary
 
 This repository is a torch implementation of [FlowNet](http://lmb.informatik.uni-freiburg.de/Publications/2015/DFIB15/), by [Alexey Dosovitskiy](http://lmb.informatik.uni-freiburg.de/people/dosovits/) et al. in Torch
 
@@ -21,7 +21,7 @@ We recommend using FlowNetSBNGraph, as it reaches a better EPE (End Point Error)
 
 There is not current implementation of FlowNetC as a specific Correlation layer module would need to be written (feel free to contribute !)
 
-##Pretrained Models
+## Pretrained Models
 Thanks to [loadcaffe](https://github.com/szagoruyko/loadcaffe) and [Pauline Luc](https://github.com/paulineluc)'s [commit](https://github.com/szagoruyko/loadcaffe/pull/75) , we were able to load pretrained caffe models in torch. If you don't want to install this unofficial pull request, you can get them directly here (float version) :
 
  - [Drive Folder](https://drive.google.com/open?id=0B5EC7HMbyk3CbjFPb0RuODI3NmM)
@@ -48,7 +48,7 @@ For further help you can type
 
 *Note on loss function* : The training error used here, is the L1 Error (`nn.AbsCriterion`) whereas they say in the paper they used End Point Error (which is not the same as mean square error implementation provided by `nn.MSECriterion`). However the Criterion used in the code they provided is clearly the L1 criterion. We chose to use this criterion as an EPE criterion would require to hardcode a new criterion in CUDA. We also name it EPE instead of 'L1Error' to save space on CLI.
 
-##Training Results
+## Training Results
 
 |  FlowNetS | FlowNetSBN |
 |---|----|
@@ -56,7 +56,7 @@ For further help you can type
 ![train_result](https://github.com/ClementPinard/FlowNetTorch/blob/master/images/FlowNetStest.png) |  ![test_result](https://github.com/ClementPinard/FlowNetTorch/blob/master/images/FlowNetSBNtest.png)
 
 
-##Live Demo
+## Live Demo
 
 Thanks to [Sergey Zagoruyko](https://github.com/szagoruyko)'s [Torch OpenCV Demo](https://github.com/szagoruyko/torch-opencv-demos) , you can run a live demo using [OpenCV bindings for torch](https://github.com/VisionLabs/torch-opencv)
 It has been tested on a **Quadro K2200M** powered Laptop at ~3 fps using training input size (you can speed it up by reducing input size)
@@ -64,7 +64,7 @@ It has been tested on a **Quadro K2200M** powered Laptop at ~3 fps using trainin
 	th liveDemo.lua --model FlowNetS_pretrained.t7 --input_height 256 --output_height 1200
 
 
-##Update regarding flying chairs dataset.
+## Update regarding flying chairs dataset.
 
 [the flying chair dataset](http://lmb.informatik.uni-freiburg.de/resources/datasets/FlyingChairs.en.html) is no longer using a list file, which made this implementation unable to retrieve image and flow files. The code has been updated to get it by itself (as the filenames follow a very regular pattern).
 

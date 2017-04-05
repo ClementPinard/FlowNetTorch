@@ -29,8 +29,8 @@ Thanks to [loadcaffe](https://github.com/szagoruyko/loadcaffe) and [Pauline Luc]
 No training is currently provided for DispNet
 
 *Note on expected inputs ranges*
-the input is supposed to be BGR [0,1] for the caffe pretrained models.
-But in the end it does not really matter if you take RGB [0,1] or BGR [0,1], since during caffe training they did color warps as data augmentation.
+
+the input is supposed to be BGR [0,1] for the caffe pretrained models. But in the end it does not really matter if you take RGB [0,1] or BGR [0,1], since during caffe training they did color warps as data augmentation.
 
 Torch pretrained models however (with 'from_scratch' appended to the name) expects a normalized inputs as in the training code.
 

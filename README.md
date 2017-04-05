@@ -28,6 +28,12 @@ Thanks to [loadcaffe](https://github.com/szagoruyko/loadcaffe) and [Pauline Luc]
 
 No training is currently provided for DispNet
 
+### Note
+the input is supposed to be BGR [0,1] for the caffe pretrained models
+But in the end it does not really matter if you take RGB [0,1] or BGR [0,1], since during caffe training they did color warps as data augmentation.
+
+Torch pretrained models however (with 'from_scratch' appended to the name) expects a normalized inputs as in the training code.
+
 ##Training on Flying Chair Dataset
 
 First, you need to download the [the flying chair dataset](http://lmb.informatik.uni-freiburg.de/resources/datasets/FlyingChairs.en.html) . It is ~64GB big and we recommend you put in a SSD Drive.
@@ -63,6 +69,7 @@ It has been tested on a **Quadro K2200M** powered Laptop at ~3 fps using trainin
 
 	th liveDemo.lua --model FlowNetS_pretrained.t7 --input_height 256 --output_height 1200
 
+The code is optimized for BGR [0,1] inputs (so for caffe pretrained networks), but still works decently for models from torch.
 
 ## Update regarding flying chairs dataset.
 

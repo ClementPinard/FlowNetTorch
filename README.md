@@ -53,6 +53,8 @@ For further help you can type
 (as in Soumith's Original code)
 
 *Note on loss function* : The training error used here, is the L1 Error (`nn.AbsCriterion`) whereas they say in the paper they used End Point Error (which is not the same as mean square error implementation provided by `nn.MSECriterion`). However the Criterion used in the code they provided is clearly the L1 criterion. We chose to use this criterion as an EPE criterion would require to hardcode a new criterion in CUDA. We also name it EPE instead of 'L1Error' to save space on CLI.
+*Update* : A real 'EPE' has been implemented [here](https://github.com/ClementPinard/FlowNetTorch/blob/master/EPECriterion.lua). As pointed by some, caffe code actually includes an EPE layer before Criterion. 'L1Error' is then used compared to a zero-filled array. We did the same thing here, while keeping inside a criterion, in order to have the same model specifications for both training and test.
+However, tests showed that convergence was not better.
 
 ## Training Results
 

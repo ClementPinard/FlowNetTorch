@@ -22,9 +22,7 @@ We recommend using FlowNetSBNGraph, as it reaches a better EPE (End Point Error)
 There is not current implementation of FlowNetC as a specific Correlation layer module would need to be written (feel free to contribute !)
 
 ## Pretrained Models
-Thanks to [loadcaffe](https://github.com/szagoruyko/loadcaffe) and [Pauline Luc](https://github.com/paulineluc)'s [commit](https://github.com/szagoruyko/loadcaffe/pull/75) , we were able to load pretrained caffe models in torch. If you don't want to install this unofficial pull request, you can get them directly here (float version) :
-
- - [Drive Folder](https://drive.google.com/open?id=0B5EC7HMbyk3CbjFPb0RuODI3NmM)
+Thanks to [loadcaffe](https://github.com/szagoruyko/loadcaffe) and [Pauline Luc](https://github.com/paulineluc)'s [commit](https://github.com/szagoruyko/loadcaffe/pull/75) , we were able to load pretrained caffe models in torch. If you don't want to install this unofficial pull request, you can get them directly in the [weights](/weights) folder (float version).
 
 No training is currently provided for DispNet
 
@@ -77,4 +75,4 @@ The code is optimized for BGR [0,1] inputs (so for caffe pretrained networks), b
 
 [the flying chair dataset](http://lmb.informatik.uni-freiburg.de/resources/datasets/FlyingChairs.en.html) is no longer using a list file, which made this implementation unable to retrieve image and flow files. The code has been updated to get it by itself (as the filenames follow a very regular pattern).
 
-However, if you want to add your own image pairs to the dataset, the compatibility with the list file is keeped. You can grab a (maybe outdated) backup of list file [here](https://drive.google.com/open?id=0B5EC7HMbyk3COEVEZ1VETzhhMnc)
+However, if you want to add your own image pairs to the dataset, the compatibility with the list file is keeped. You can grab a (maybe outdated) backup of list file in the root of this repo, or [here](https://github.com/ClementPinard/FlowNetTorch/raw/refs/heads/master/FlyingChairs_release.list)
